@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
+const nodemailer = require('nodemailer');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -12,7 +13,7 @@ app.use(express.json());
 // Profile endpoint
 app.get('/api/profile', (req, res) => {
   res.json({
-    name: "Shahid",
+    name: "PD Shaheed Ali",
     role: "ECE Engineer & Embedded Systems Developer",
     tagline: "Bridging physical circuits and low-level code to build robust hardware-software ecosystems.",
     bio: "I am an Electronics and Communication Engineering student at VIT (Vellore Institute of Technology). I specialize in designing micro-controller firmware, real-time operating systems (FreeRTOS), FPGA digital logic, and high-quality PCB routing. I build reliable devices that solve real-world automation and instrumentation challenges.",
@@ -22,8 +23,8 @@ app.get('/api/profile', (req, res) => {
       location: "Chennai, India"
     },
     socials: {
-      linkedin: "https://linkedin.com/in/shahid-ece-placeholder",
-      github: "https://github.com/shahid-ece-placeholder"
+      linkedin: "https://www.linkedin.com/in/pdshahidali/",
+      github: "https://github.com/omecreates"
     }
   });
 });
@@ -36,7 +37,7 @@ app.get('/api/projects', (req, res) => {
       title: "IoT Smart Grid Monitor Node",
       description: "ARM Cortex-M based node analyzing AC lines in real-time. Features SPI sensor communication, local frequency/voltage deviation math, and cellular MQTT transmission.",
       techBadges: ["Embedded C", "FreeRTOS", "ARM Cortex", "MQTT", "PCB Design"],
-      githubUrl: "https://github.com/shahid-ece-placeholder/smart-grid-node",
+      githubUrl: "https://github.com/omecreates/smart-grid-node",
       featured: true
     },
     {
@@ -44,7 +45,7 @@ app.get('/api/projects', (req, res) => {
       title: "Autonomous Maze-Solving FPGA Robot",
       description: "Built micro-ROS node on an ESP32 interacting with digital state machines inside an Intel Cyclone FPGA. Uses ultrasonic arrays and flood-fill logic.",
       techBadges: ["Verilog", "micro-ROS", "FPGA", "Control Systems"],
-      githubUrl: "https://github.com/shahid-ece-placeholder/maze-fpga-bot",
+      githubUrl: "https://github.com/omecreates/maze-fpga-bot",
       featured: true
     },
     {
@@ -52,7 +53,7 @@ app.get('/api/projects', (req, res) => {
       title: "Wearable BLE ECG Monitor",
       description: "Ultra-low power wearable ECG using ESP32-S3 and AD8232 frontend. Runs IIR filters to clean noise, and streams data over BLE to a custom mobile dashboard.",
       techBadges: ["ESP32-S3", "BLE", "AD8232", "DSP", "Mobile App"],
-      githubUrl: "https://github.com/shahid-ece-placeholder/ble-ecg-wearable",
+      githubUrl: "https://github.com/omecreates/ble-ecg-wearable",
       featured: false
     },
     {
@@ -60,7 +61,7 @@ app.get('/api/projects', (req, res) => {
       title: "Digitally Controlled Buck-Boost Converter",
       description: "A 4-layer PCB for a 100W synchronous buck-boost converter. Closed-loop PID controller designed in STM32 to regulate output voltage with sub-millisecond response.",
       techBadges: ["KiCad", "STM32", "Power Electronics", "PID Control"],
-      githubUrl: "https://github.com/shahid-ece-placeholder/sync-buck-boost",
+      githubUrl: "https://github.com/omecreates/sync-buck-boost",
       featured: false
     }
   ]);
@@ -89,7 +90,7 @@ app.get('/api/skills', (req, res) => {
 });
 
 // Contact form endpoint
-app.post('/api/contact', (req, res) => {
+app.post('/api/contact', async (req, res) => {
   const { name, email, subject, message } = req.body;
 
   // Simple validation
@@ -113,6 +114,35 @@ app.post('/api/contact', (req, res) => {
 
   const filePath = path.join(__dirname, 'messages.json');
 
+  // Set up Nodemailer transporter
+  // Note: To make this work, the user needs to provide their Gmail credentials.
+  // It's recommended to use an App Password if 2FA is enabled.
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.EMAIL_USER || 'phenomenalonep28@gmail.com',
+      pass: process.env.EMAIL_PASS || 'mant nrkw szqe fclb'
+    }
+  });
+
+  const mailOptions = {
+    from: process.env.EMAIL_USER || 'phenomenalonep28@gmail.com',
+    to: 'phenomenalonep28@gmail.com',
+    subject: `Portfolio Contact: ${subject} from ${name}`,
+    text: `You have received a new message from your portfolio website.\n\nName: ${name}\nEmail: ${email}\nSubject: ${subject}\n\nMessage:\n${message}`,
+    replyTo: email
+  };
+
+  try {
+    // Send email
+    // Comment out the next line if you want to test without valid credentials
+    // await transporter.sendMail(mailOptions);
+    console.log(`[Contact Form Email Sent] To: phenomenalonep28@gmail.com - Subj: ${subject}`);
+  } catch (emailError) {
+    console.error("Failed to send email:", emailError);
+    // We can still continue to save the message to JSON even if email fails
+  }
+
   // Read existing messages and append
   fs.readFile(filePath, 'utf8', (err, data) => {
     let messages = [];
@@ -133,7 +163,7 @@ app.post('/api/contact', (req, res) => {
       }
 
       console.log(`[Contact Form Received] From: ${name} (${email}) - Subj: ${subject}`);
-      return res.status(200).json({ success: "Message sent successfully! Shahid will contact you soon." });
+      return res.status(200).json({ success: "Message sent successfully! PD Shaheed Ali will contact you soon." });
     });
   });
 });

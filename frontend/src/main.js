@@ -1,6 +1,7 @@
 import './styles/variables.css';
 import './styles/main.css';
 import { renderHome } from './pages/Home';
+import './components/BackgroundAnimations';
 
 const appElement = document.querySelector('#app');
 if (appElement) {

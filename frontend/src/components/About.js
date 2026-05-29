@@ -1,3 +1,5 @@
+﻿
+
 export function renderAbout(profile) {
   const bio = profile?.bio || "I am an Electrical and computer science Engineer passionate about low-level programming and circuits.";
   const stats = profile?.stats || {
@@ -8,6 +10,7 @@ export function renderAbout(profile) {
 
   return `
     <section class="slide about-section" id="about">
+      <AboutBackground />
       <div class="about-container reveal">
         <h2 class="section-heading">About Me</h2>
         
@@ -42,12 +45,8 @@ export function renderAbout(profile) {
 
           <!-- Right: Short Bio Paragraph -->
           <div class="bio-content">
-            <h3 class="bio-heading">Designing hardware and software with artificial intelligence.</h3>
+            <h3 class="bio-heading">Building intelligent software, full-stack applications, and embedded systems.</h3>
             <p class="bio-text">${bio}</p>
-            <div class="bio-quote">
-              <span class="quote-mark">“</span>
-              <span class="quote-text">The best hardware is only as good as the firmware that brings it to life.</span>
-            </div>
           </div>
         </div>
       </div>
