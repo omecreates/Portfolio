@@ -1,4 +1,4 @@
-﻿
+
 
 export function renderProjects(projects) {
   if (!projects || projects.length === 0) {
@@ -42,7 +42,6 @@ export function renderProjects(projects) {
 
   return `
     <section class="slide projects-section" id="projects">
-      <ProjectsBackground />
       <div class="projects-container reveal">
         <h2 class="section-heading">Projects</h2>
         <div class="projects-grid">

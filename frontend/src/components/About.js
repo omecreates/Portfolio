@@ -1,4 +1,4 @@
-﻿
+
 
 export function renderAbout(profile) {
   const bio = profile?.bio || "I am an Electrical and computer science Engineer passionate about low-level programming and circuits.";
@@ -10,7 +10,6 @@ export function renderAbout(profile) {
 
   return `
     <section class="slide about-section" id="about">
-      <AboutBackground />
       <div class="about-container reveal">
         <h2 class="section-heading">About Me</h2>
         

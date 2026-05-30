@@ -1,12 +1,18 @@
-/* Color Palette & Design Tokens */
+/* Color Palette & Design Tokens - Premium Dark Mode */
 :root {
-  /* Colors */
-  --color-bg: #FFFFFF;
-  --color-accent: #E63946;
-  --color-text: #0D0D0D;
-  --color-surface: #F5F5F5;
-  --color-border: #0D0D0D;
+  /* Core Colors */
+  --color-bg: #030305;       /* Deep rich dark background */
+  --color-accent: #ff0000;   /* Vibrant neon pinkish-red */
+  --color-accent-dim: rgba(255, 42, 95, 0.2);
+  --color-text: #ffffff;     /* Off-white for crisp text */
+  --color-text-muted: #A0AEC0;
+  --color-surface: #0f1015;  /* Slightly lighter surface for cards */
+  --color-border: #222a46;   /* Subtle dark border */
   
+  /* Additional Accents for Gradients */
+  --color-accent-alt: #4a00e0; /* Deep purple */
+  --color-accent-alt2: #8e2de2; /* Bright purple */
+
   /* Fonts */
   --font-heading: 'Syne', sans-serif;
   --font-mono: 'Space Mono', monospace;

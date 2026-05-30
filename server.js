@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const fs = require('fs');
@@ -93,7 +94,7 @@ app.get('/api/skills', (req, res) => {
 app.post('/api/contact', async (req, res) => {
   const { name, email, subject, message } = req.body;
 
-  // Simple validation
+  // Validation
   if (!name || !email || !subject || !message) {
     return res.status(400).json({ error: "All fields are required." });
   }
@@ -112,38 +113,64 @@ app.post('/api/contact', async (req, res) => {
     timestamp: new Date().toISOString()
   };
 
-  const filePath = path.join(__dirname, 'messages.json');
-
-  // Set up Nodemailer transporter
-  // Note: To make this work, the user needs to provide their Gmail credentials.
-  // It's recommended to use an App Password if 2FA is enabled.
+  // Set up Nodemailer transporter using environment variables
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-      user: process.env.EMAIL_USER || 'phenomenalonep28@gmail.com',
-      pass: process.env.EMAIL_PASS || 'mant nrkw szqe fclb'
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS
     }
   });
 
-  const mailOptions = {
-    from: process.env.EMAIL_USER || 'phenomenalonep28@gmail.com',
-    to: 'phenomenalonep28@gmail.com',
+  // Email to portfolio owner
+  const ownerMailOptions = {
+    from: process.env.EMAIL_USER,
+    to: process.env.EMAIL_USER,
     subject: `Portfolio Contact: ${subject} from ${name}`,
-    text: `You have received a new message from your portfolio website.\n\nName: ${name}\nEmail: ${email}\nSubject: ${subject}\n\nMessage:\n${message}`,
+    html: `
+      <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 24px; border: 1px solid #e5e5e5; border-radius: 8px;">
+        <h2 style="color: #E63946; margin-bottom: 4px;">New Portfolio Message</h2>
+        <hr style="border: none; border-top: 1px solid #eee; margin-bottom: 20px;" />
+        <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Subject:</strong> ${subject}</p>
+        <p><strong>Message:</strong></p>
+        <p style="background: #f9f9f9; padding: 12px; border-left: 4px solid #E63946; border-radius: 4px;">${message}</p>
+      </div>
+    `,
     replyTo: email
   };
 
+  // Auto-reply to sender
+  const autoReplyOptions = {
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: `Thanks for reaching out, ${name}!`,
+    html: `
+      <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 24px; border: 1px solid #e5e5e5; border-radius: 8px;">
+        <h2 style="color: #E63946;">Hey ${name}, got your message!</h2>
+        <p>Thanks for reaching out. I've received your message and will get back to you as soon as possible.</p>
+        <p style="color: #888; font-size: 13px; margin-top: 32px;">— PD Shaheed Ali</p>
+      </div>
+    `
+  };
+
   try {
-    // Send email
-    // Comment out the next line if you want to test without valid credentials
-    // await transporter.sendMail(mailOptions);
-    console.log(`[Contact Form Email Sent] To: phenomenalonep28@gmail.com - Subj: ${subject}`);
+    // Send email to owner
+    await transporter.sendMail(ownerMailOptions);
+
+    // Send auto-reply to sender
+    await transporter.sendMail(autoReplyOptions);
+
+    console.log(`[Email Sent] From: ${name} (${email}) - Subj: ${subject}`);
   } catch (emailError) {
     console.error("Failed to send email:", emailError);
-    // We can still continue to save the message to JSON even if email fails
+    return res.status(500).json({ error: "Failed to send email. Please check server email configuration." });
   }
 
-  // Read existing messages and append
+  // Save message to messages.json as backup
+  const filePath = path.join(__dirname, 'messages.json');
+
   fs.readFile(filePath, 'utf8', (err, data) => {
     let messages = [];
     if (!err && data) {
@@ -158,14 +185,12 @@ app.post('/api/contact', async (req, res) => {
 
     fs.writeFile(filePath, JSON.stringify(messages, null, 2), (writeErr) => {
       if (writeErr) {
-        console.error("Failed to save message:", writeErr);
-        return res.status(500).json({ error: "Failed to submit message. Please try again." });
+        console.error("Failed to save message to file:", writeErr);
       }
-
-      console.log(`[Contact Form Received] From: ${name} (${email}) - Subj: ${subject}`);
-      return res.status(200).json({ success: "Message sent successfully! PD Shaheed Ali will contact you soon." });
     });
   });
+
+  return res.status(200).json({ success: "Message sent successfully! PD Shaheed Ali will contact you soon." });
 });
 
 function startServer(port) {

@@ -1,4 +1,4 @@
-﻿
+
 
 export function renderHero(profile) {
   const tagline = profile?.tagline || "Designing next-generation web applications, hardware and firmware solutions.";
@@ -6,7 +6,6 @@ export function renderHero(profile) {
 
   return `
     <section class="slide hero-section" id="hero">
-      <HeroBackground />
       <div class="diagonal-grid"></div>
       <div class="hero-content reveal active">
         <span class="hero-badge">Welcome to my space</span>

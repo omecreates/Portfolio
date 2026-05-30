@@ -178,6 +178,10 @@ export async function renderHome(appElement) {
   initHero();
   initScrollReveal();
   initContactForm();
+  initStackingCards();
+  
+  // Initialize background animations manually after DOM is set
+  import('../components/BackgroundAnimations.js').then(m => m.initBackgroundAnimations());
 }
 
 function renderContactSection(profile) {
@@ -187,7 +191,6 @@ function renderContactSection(profile) {
 
   return `
     <section class="slide contact-section" id="contact">
-      <ContactBackground />
       <div class="contact-container reveal">
         <h2 class="section-heading">Get In Touch</h2>
 
@@ -378,6 +381,95 @@ function initScrollReveal() {
   window.addEventListener('scroll', revealOnScroll);
   // Run once to show items already in view
   revealOnScroll();
+}
+
+/**
+ * Stacking Cards — scroll-driven scale + progress bar
+ *
+ * • Scales each card down (1 → MIN_SCALE) as the next slides over it
+ * • Stamps data-card-index on each slide so CSS renders a badge
+ * • Drives a fixed red progress bar across the top of the viewport
+ *
+ * All DOM writes are batched inside a single rAF for 60 fps.
+ */
+function initStackingCards() {
+  const slides = Array.from(
+    document.querySelectorAll('.slides-container section.slide')
+  );
+  if (slides.length < 2) return;
+
+  // ── Stamp each card with an ordinal label for the CSS ::after badge ──
+  slides.forEach((slide, i) => {
+    const num   = String(i + 1).padStart(2, '0');
+    const total = String(slides.length).padStart(2, '0');
+    slide.setAttribute('data-card-index', `${num} / ${total}`);
+  });
+
+  // ── Inject the scroll-progress bar element ──
+  let progressBar = document.getElementById('scroll-progress-bar');
+  if (!progressBar) {
+    progressBar = document.createElement('div');
+    progressBar.id = 'scroll-progress-bar';
+    document.body.prepend(progressBar);
+  }
+
+  // ── Constants ──
+  const MIN_SCALE = 0.88; // smallest a card gets when fully covered
+
+  let rafScheduled = false;
+
+  function updateScales() {
+    rafScheduled = false;
+
+    // Only run the stacking scale on desktop
+    const isDesktop = window.innerWidth >= 768;
+    const vh = window.innerHeight;
+
+    // ── Progress bar ──
+    const scrollTop    = window.scrollY || document.documentElement.scrollTop;
+    const docHeight    = document.documentElement.scrollHeight - vh;
+    const scrollPct    = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    progressBar.style.width = `${Math.min(100, scrollPct).toFixed(2)}%`;
+
+    if (!isDesktop) return;
+
+    slides.forEach((slide, i) => {
+      const nextSlide = slides[i + 1];
+
+      if (!nextSlide) {
+        slide.style.setProperty('--card-scale', '1');
+        return;
+      }
+
+      // nextSlide.getBoundingClientRect().top:
+      //   = vh  → hasn't entered viewport yet   → progress 0
+      //   = 0   → fully covers current card     → progress 1
+      const nextTop  = nextSlide.getBoundingClientRect().top;
+      const progress = Math.min(1, Math.max(0, (vh - nextTop) / vh));
+      const scale    = 1 - progress * (1 - MIN_SCALE);
+
+      slide.style.setProperty('--card-scale', scale.toFixed(4));
+    });
+  }
+
+  function onScroll() {
+    if (!rafScheduled) {
+      rafScheduled = true;
+      requestAnimationFrame(updateScales);
+    }
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  window.addEventListener('resize', () => {
+    if (window.innerWidth < 768) {
+      slides.forEach(s => s.style.removeProperty('--card-scale'));
+    }
+    updateScales();
+  });
+
+  // Run immediately so the initial state is correct
+  updateScales();
 }
 
 function initContactForm() {

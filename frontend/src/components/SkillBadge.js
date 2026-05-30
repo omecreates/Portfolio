@@ -1,4 +1,4 @@
-﻿
+
 
 export function renderSkills(skillCategories) {
   if (!skillCategories || skillCategories.length === 0) {
@@ -22,7 +22,6 @@ export function renderSkills(skillCategories) {
 
   return `
     <section class="slide skills-section" id="skills">
-      <SkillsBackground />
       <div class="skills-container reveal">
         <h2 class="section-heading">Skills</h2>
         <div class="skills-grid">
