@@ -156,12 +156,8 @@ app.post('/api/contact', async (req, res) => {
   };
 
   try {
-    // Send email to owner
     await transporter.sendMail(ownerMailOptions);
-
-    // Send auto-reply to sender
     await transporter.sendMail(autoReplyOptions);
-
     console.log(`[Email Sent] From: ${name} (${email}) - Subj: ${subject}`);
   } catch (emailError) {
     console.error("Failed to send email:", emailError);
@@ -180,22 +176,19 @@ app.post('/api/contact', async (req, res) => {
         messages = [];
       }
     }
-
     messages.push(messageData);
-
     fs.writeFile(filePath, JSON.stringify(messages, null, 2), (writeErr) => {
-      if (writeErr) {
-        console.error("Failed to save message to file:", writeErr);
-      }
+      if (writeErr) console.error("Failed to save message to file:", writeErr);
     });
   });
 
   return res.status(200).json({ success: "Message sent successfully! PD Shaheed Ali will contact you soon." });
 });
 
+// ✅ FIXED: bind to 0.0.0.0 for Render compatibility
 function startServer(port) {
-  const server = app.listen(port, '127.0.0.1', () => {
-    console.log(`Backend server is successfully running on http://127.0.0.1:${port}`);
+  const server = app.listen(port, '0.0.0.0', () => {
+    console.log(`Backend server is successfully running on http://0.0.0.0:${port}`);
   });
 
   server.on('error', (err) => {

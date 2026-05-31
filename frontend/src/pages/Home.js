@@ -6,7 +6,7 @@ import { renderProjects } from '../components/ProjectCard';
 import { renderSkills } from '../components/SkillBadge';
 import { showToast } from '../components/Toast';
 
-let API_BASE_URL = 'http://localhost:5000';
+let API_BASE_URL = 'https://portfolio-backend-swxv.onrender.com';
 
 async function detectBackend() {
   const potentialBases = [
