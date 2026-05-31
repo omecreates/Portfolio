@@ -1,4 +1,4 @@
-﻿export function renderNavbar() {
+export function renderNavbar() {
   return `
     <nav class="navbar" id="navbar">
       <div class="nav-container">
@@ -12,8 +12,10 @@
 
         <div class="nav-menu" id="nav-menu">
           <a href="#about" class="nav-link">About</a>
+          <a href="#timeline" class="nav-link">Experience</a>
           <a href="#projects" class="nav-link">Projects</a>
           <a href="#skills" class="nav-link">Skills</a>
+          <a href="#credentials" class="nav-link">Credentials</a>
           <a href="#contact" class="nav-link">Contact</a>
           <div class="nav-socials">
             <a href="https://github.com/omecreates" target="_blank" rel="noopener noreferrer" class="nav-social-link" aria-label="GitHub">

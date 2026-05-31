@@ -1,30 +1,30 @@
 /* Color Palette & Design Tokens - Premium Dark Mode */
 :root {
-  /* Core Colors */
+  /* Core Colors - Professional Premium Dark */
   --color-bg: #030305;       /* Deep rich dark background */
-  --color-accent: #ff0000;   /* Vibrant neon pinkish-red */
-  --color-accent-dim: rgba(255, 42, 95, 0.2);
+  --color-accent: #b91c1c;   /* Professional dark red / crimson */
+  --color-accent-dim: rgba(185, 28, 28, 0.15);
   --color-text: #ffffff;     /* Off-white for crisp text */
   --color-text-muted: #A0AEC0;
-  --color-surface: #0f1015;  /* Slightly lighter surface for cards */
-  --color-border: #222a46;   /* Subtle dark border */
+  --color-surface: rgba(24, 24, 27, 0.6);  /* Elevated surface for glass */
+  --color-border: rgba(255, 255, 255, 0.06);   /* Ultra subtle border */
   
   /* Additional Accents for Gradients */
   --color-accent-alt: #4a00e0; /* Deep purple */
   --color-accent-alt2: #8e2de2; /* Bright purple */
 
   /* Fonts */
-  --font-heading: 'Syne', sans-serif;
-  --font-mono: 'Space Mono', monospace;
-  --font-body: 'Outfit', sans-serif;
+  --font-heading: 'Manrope', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-body: 'Inter', sans-serif;
 
   /* Font Sizes */
-  --size-xs: 14px;
-  --size-sm: 16px;
-  --size-md: 20px;
-  --size-lg: 28px;
-  --size-xl: 40px;
-  --size-xxl: 64px;
+  --size-xs: 16px;
+  --size-sm: 18px;
+  --size-md: 24px;
+  --size-lg: 32px;
+  --size-xl: 48px;
+  --size-xxl: 72px;
 
   /* Transitions */
   --transition-fast: 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);

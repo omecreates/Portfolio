@@ -2,8 +2,10 @@
 
 import { renderHero, initHero } from '../components/Hero';
 import { renderAbout } from '../components/About';
+import { renderTimeline } from '../components/Timeline';
 import { renderProjects } from '../components/ProjectCard';
 import { renderSkills } from '../components/SkillBadge';
+import { renderCredentials } from '../components/Credentials';
 import { showToast } from '../components/Toast';
 
 let API_BASE_URL = 'https://portfolio-backend-swxv.onrender.com';
@@ -57,7 +59,8 @@ const FALLBACK_PROFILE = {
 const FALLBACK_PROJECTS = [
   {
     id: 1,
-    title: "StockGlobe",
+  title: "StockGlobe",
+  imageUrl: "/Stockglobe.png",
     description: "AI-powered stock market intelligence platform that leverages machine learning and real-time market data to analyze trends, generate insights, and support informed investment decisions.",
     techBadges: ["React", "TypeScript", "FastAPI", "Python", "AI/ML", "Stock Analytics", "REST API"],
     githubUrl: "https://github.com/omecreates/StockGlobe",
@@ -66,6 +69,7 @@ const FALLBACK_PROJECTS = [
   {
     id: 2,
     title: "AI Resume Analyzer",
+    imageUrl: "/ResumeAnalyser.png",
     description: "AI-powered resume analyzer leveraging NLP to extract skills, evaluate ATS compatibility, and provide intelligent resume improvement suggestions.",
     techBadges: ["React", "Flask", "Python", "NLP", "Machine Learning", "spaCy", "Scikit-Learn"],
     githubUrl: "https://github.com/omecreates/ResumeAnalyser",
@@ -74,22 +78,31 @@ const FALLBACK_PROJECTS = [
   {
     id: 3,
     title: "Travel Partner Finder",
+    imageUrl: "/TravelPartnerFinder.png",
     description: "Android application that helps travelers find compatible travel partners based on destination, route, timing, and travel preferences.",
     techBadges: ["Java", "Android Studio", "Firebase", "Mobile Development"],
     githubUrl: "https://github.com/omecreates",
-    featured: false
+    featured: true
   },
   {
     id: 4,
-    title: "Doppler Radar Monitoring System",
-    description: "Arduino-based system using dual Doppler radar sensors and a 16x2 LCD to detect motion, measure speed, and estimate distance in real time.",
-    techBadges: ["Arduino", "Embedded Systems", "IoT", "Sensors", "C++"],
+    title: "Electronic Voting Machine using 8051(EVM)",
+    imageUrl: "/EVM.png",
+    description: "Developed a microcontroller-based Electronic Voting Machine (EVM) featuring candidate selection, vote counting, result display, and reset functionality using a 16x2 LCD and push-button interface.",
+    techBadges: [[
+  "Embedded C",
+  "8051",
+  "LCD Interfacing",
+  "Circuit Design",
+  "Embedded Systems"
+]],
     githubUrl: "https://github.com/omecreates",
     featured: false
   },
   {
     id: 5,
     title: "Java Search Engine",
+    imageUrl: "/JavaSearchEngine.png",
     description: "Designed and developed a search engine using Java that processes and indexes textual data, enabling fast keyword-based retrieval and relevance ranking through optimized data structures and algorithms.",
     techBadges: ["Java", "Data Structures", "Algorithms", "Search Indexing", "OOP"],
     githubUrl: "https://github.com/omecreates/BasicJavaSearchEngine",
@@ -164,8 +177,10 @@ export async function renderHome(appElement) {
     <div class="slides-container">
       ${renderHero(profile)}
       ${renderAbout(profile)}
+      ${renderTimeline(profile)}
       ${renderProjects(projects)}
       ${renderSkills(skills)}
+      ${renderCredentials(profile)}
       ${renderContactSection(profile)}
     </div>
     
@@ -198,9 +213,20 @@ function renderContactSection(profile) {
           I'd love to hear from you.
         </p>
 
-        <div class="contact-grid">
+        <div class="contact-grid" style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 40px; align-items: center;">
+          <!-- Left: Illustration -->
+          <div class="contact-illustration-wrapper" style="text-align: center;">
+            <svg viewBox="0 0 400 300" fill="none" class="contact-illustration" style="width:100%; max-width:300px;">
+              <circle cx="200" cy="150" r="100" fill="var(--color-accent)" opacity="0.1" filter="blur(40px)"/>
+              <path d="M50 100 L200 200 L350 100 V250 H50 Z" fill="var(--color-surface)" stroke="var(--color-border)" stroke-width="4"/>
+              <path d="M50 100 L200 200 L350 100" stroke="var(--color-accent)" stroke-width="4" stroke-linejoin="round"/>
+              <circle cx="200" cy="200" r="8" fill="var(--color-accent)"/>
+              <path d="M20 50 L100 80 L80 120 Z" fill="var(--color-accent-dim)"/>
+              <path d="M380 80 L350 50 L320 90 Z" fill="var(--color-surface)" stroke="var(--color-border)"/>
+            </svg>
+          </div>
 
-          <!-- Contact Form -->
+          <!-- Right: Contact Form -->
           <div class="contact-form-wrapper">
             <form id="contact-form" class="contact-form">
 
@@ -362,34 +388,28 @@ function renderFooter(profile) {
 function initScrollReveal() {
   const reveals = document.querySelectorAll('.reveal');
   
-  const revealOnScroll = () => {
-    reveals.forEach(el => {
-      const windowHeight = window.innerHeight;
-      const elementTop = el.getBoundingClientRect().top;
-      const elementVisible = 150;
-      
-      if (elementTop < windowHeight - elementVisible) {
-        el.classList.add('active');
-      }
-    });
-  };
+  // Use IntersectionObserver — works correctly with position:sticky cards
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+          // Once revealed, no need to keep observing
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    {
+      threshold: 0.08,          // fire when 8% of the element is visible
+      rootMargin: '0px 0px -40px 0px'
+    }
+  );
 
-  window.addEventListener('scroll', revealOnScroll);
-  revealOnScroll();
+  reveals.forEach(el => observer.observe(el));
 }
 
 function initStackingCards() {
-  const slides = Array.from(
-    document.querySelectorAll('.slides-container section.slide')
-  );
-  if (slides.length < 2) return;
-
-  slides.forEach((slide, i) => {
-    const num   = String(i + 1).padStart(2, '0');
-    const total = String(slides.length).padStart(2, '0');
-    slide.setAttribute('data-card-index', `${num} / ${total}`);
-  });
-
+  // Only update the scroll progress bar — no scale/stacking transforms.
   let progressBar = document.getElementById('scroll-progress-bar');
   if (!progressBar) {
     progressBar = document.createElement('div');
@@ -397,55 +417,25 @@ function initStackingCards() {
     document.body.prepend(progressBar);
   }
 
-  const MIN_SCALE = 0.88;
   let rafScheduled = false;
 
-  function updateScales() {
+  function updateProgress() {
     rafScheduled = false;
-
-    const isDesktop = window.innerWidth >= 768;
-    const vh = window.innerHeight;
-
-    const scrollTop    = window.scrollY || document.documentElement.scrollTop;
-    const docHeight    = document.documentElement.scrollHeight - vh;
-    const scrollPct    = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
-    progressBar.style.width = `${Math.min(100, scrollPct).toFixed(2)}%`;
-
-    if (!isDesktop) return;
-
-    slides.forEach((slide, i) => {
-      const nextSlide = slides[i + 1];
-
-      if (!nextSlide) {
-        slide.style.setProperty('--card-scale', '1');
-        return;
-      }
-
-      const nextTop  = nextSlide.getBoundingClientRect().top;
-      const progress = Math.min(1, Math.max(0, (vh - nextTop) / vh));
-      const scale    = 1 - progress * (1 - MIN_SCALE);
-
-      slide.style.setProperty('--card-scale', scale.toFixed(4));
-    });
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    progressBar.style.width = `${Math.min(100, pct).toFixed(2)}%`;
   }
 
   function onScroll() {
     if (!rafScheduled) {
       rafScheduled = true;
-      requestAnimationFrame(updateScales);
+      requestAnimationFrame(updateProgress);
     }
   }
 
   window.addEventListener('scroll', onScroll, { passive: true });
-
-  window.addEventListener('resize', () => {
-    if (window.innerWidth < 768) {
-      slides.forEach(s => s.style.removeProperty('--card-scale'));
-    }
-    updateScales();
-  });
-
-  updateScales();
+  updateProgress();
 }
 
 function initContactForm() {
