@@ -113,7 +113,7 @@ const FALLBACK_PROJECTS = [
 const FALLBACK_SKILLS = [
   {
     category: "Languages",
-    items: ["Java", "Python", "C", "C++", "JavaScript", "TypeScript"]
+    items: ["Java", "Python", "C", "C++", "JavaScript", "TypeScript", "CSS", "HTML", "SQL", "Assembly"]
   },
   {
     category: "Frontend",
@@ -129,7 +129,7 @@ const FALLBACK_SKILLS = [
   },
   {
     category: "Embedded & IoT",
-    items: ["Arduino", "Embedded C", "Sensors", "I2C", "UART", "IoT"]
+    items: ["Arduino", "Embedded C", "Sensors", "I2C", "UART", "IoT","Assembly Language"]
   },
   {
     category: "Developer Tools",
