@@ -1,7 +1,3 @@
-/**
- * BackgroundAnimations.js — Minimalist Professional Edition
- * Stripped down to only essential, subtle animations.
- */
 
 const reduced = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 

@@ -2,11 +2,11 @@
 :root {
   /* Core Colors - Professional Premium Dark */
   --color-bg: #030305;       /* Deep rich dark background */
-  --color-accent: #b91c1c;   /* Professional dark red / crimson */
+  --color-accent: #b60505;   /* Professional dark red / crimson */
   --color-accent-dim: rgba(185, 28, 28, 0.15);
-  --color-text: #ffffff;     /* Off-white for crisp text */
+  --color-text: #d4c8c8;     /* Off-white for crisp text */
   --color-text-muted: #A0AEC0;
-  --color-surface: rgba(24, 24, 27, 0.6);  /* Elevated surface for glass */
+  --color-surface: rgba(33, 33, 41, 0.6);  /* Elevated surface for glass */
   --color-border: rgba(255, 255, 255, 0.06);   /* Ultra subtle border */
   
   /* Additional Accents for Gradients */

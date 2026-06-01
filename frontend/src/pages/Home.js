@@ -78,10 +78,11 @@ const FALLBACK_PROJECTS = [
   {
     id: 3,
     title: "Travel Partner Finder",
+    imageURL: "/Travel.png",
     imageUrl: "/TravelPartnerFinder.png",
     description: "Android application that helps travelers find compatible travel partners based on destination, route, timing, and travel preferences.",
     techBadges: ["Java", "Android Studio", "Firebase", "Mobile Development"],
-    githubUrl: "https://github.com/omecreates",
+    githubUrl: "https://github.com/omecreates/Travel-Partner-Finder",
     featured: true
   },
   {
